@@ -1,27 +1,21 @@
 package pl.jaceksysiak.hibernate.demo.entity;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.persistence.CollectionTable;
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="student")
+@Table(name="STUDENT")
 public class Student {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="id")
 	private int id;
 	
 	@Column(name="first_name")
@@ -32,14 +26,30 @@ public class Student {
 	
 	@Column(name="email")
 	private String email;
+	
+	// The Address is @Embeddable, no annotation needed here...
+	private Address homeAddress;
+	
+	//Overriding Embedded attributes
+	@AttributeOverrides({
+		@AttributeOverride(name="street", column=@Column(name="BILLING_STREET")),
+		@AttributeOverride(name="zipcode", column=@Column(name="BILLING_ZIPCODE")),
+		@AttributeOverride(name="city", column=@Column(name="BILLING_CITY")),
+	})
+	private Address billingAddress;
+	
+	public Address getHomeAddress() {
+		return homeAddress;
+	}
+
+	public void setHomeAddress(Address homeAddress) {
+		this.homeAddress = homeAddress;
+	}
+
+	public Student() {
 		
-	@ElementCollection
-	@CollectionTable(name="image")
-	@OrderColumn
-	@Column(name="file_name") //defaults to images
-	private List<String> images = new ArrayList<String>();
-	
-	
+	}
+
 	public Student(String firstName, String lastName, String email) {
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -78,18 +88,22 @@ public class Student {
 		this.email = email;
 	}
 
-
-	public List<String> getImages() {
-		return images;
+	public Address getBillingAddress() {
+		return billingAddress;
 	}
 
-	public void setImages(List<String> images) {
-		this.images = images;
+	public void setBillingAddress(Address billingAddress) {
+		this.billingAddress = billingAddress;
 	}
-
+	
+	
 	@Override
 	public String toString() {
 		return "Student [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + "]";
 	}
-	
+
 }
+
+
+
+

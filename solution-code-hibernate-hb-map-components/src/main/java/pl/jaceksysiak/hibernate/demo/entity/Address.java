@@ -3,7 +3,7 @@ package pl.jaceksysiak.hibernate.demo.entity;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
-@Embeddable //instead of @Entity
+@Embeddable //instead of @Entity   - dane adresowe są w tabeli Student
 public class Address {
 
     @Column
